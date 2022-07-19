@@ -23,7 +23,7 @@ class AppConfig {
   shimmers(context) {
     return Shimmer.fromColors(
         baseColor: Colors.grey.shade300,
-        highlightColor: Colors.green.shade500,
+        highlightColor: Colors.blue.shade500,
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

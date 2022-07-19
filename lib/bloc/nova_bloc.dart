@@ -79,21 +79,22 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
   Sink<List<num>> get inDeletedProductsIndexList =>
       _deletedProductsIndexListStreamController.sink;
 
+  final StreamController<List<String>>
+      _selectedPendingOrdersIdsListStreamController = BehaviorSubject();
+  Stream<List<String>> get outSelectedPendingOrdersIdsList =>
+      _selectedPendingOrdersIdsListStreamController.stream;
+  Sink<List<String>> get inSelectedPendingOrdersIdsList =>
+      _selectedPendingOrdersIdsListStreamController.sink;
+
   final StreamController<bool> _isProcessing = BehaviorSubject();
   Stream<bool> get outIsProcessing => _isProcessing.stream;
   Sink<bool> get inIsProcessing => _isProcessing.sink;
-  void dispose() {
-    // _isObscuredStreamController.close();
-    // _loginResponseStreamController.close();
 
-    // _pickUpDetailResponseStreamController.close();
-
-    // _startPickupProductsConfirmedStreamController.close();
-    // _startPickupProofImagesStreamController.close();
-    // _startPickupSignatureStreamController.close();
-    // _deletedProductsIndexListStreamController.close();
-    // _isProcessing.close();
-  }
+  final StreamController<bool> _selectAllPendingDeliveries = BehaviorSubject();
+  Stream<bool> get outSelectAllPendingDeliveries =>
+      _selectAllPendingDeliveries.stream;
+  Sink<bool> get inSelectAllPendingDeliveries =>
+      _selectAllPendingDeliveries.sink;
 
   NovaBloc() : super(OvaInitial()) {
     on<NovaEvent>((event, emit) async {
@@ -107,7 +108,6 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
             LoginResponseModel loginResponse =
                 LoginResponseModel.fromJson(json.decode(response.body));
             HiveService().saveDriverDetail(loginResponse.data!);
-            print(HiveService().getDriverDetail().name);
 
             Navigator.of(event.context!).push(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
@@ -133,71 +133,46 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
         }
       }
 
-      if (event is GetPickupDetailEvent) {
-        Response? response = await HttpService().getPickupDetail(id: event.id);
-
-        if (response != null) {
-          debugPrint(response.body);
-          if (response.statusCode == 200) {
-            inPickupDetailResponse
-                .add(pickupDetailResponseModelFromJson(response.body));
-          }
-        }
-      }
-
-      if (event is StartPickupEvent) {
-        Response? response = await HttpService().startPickupService(
-            applicationId: event.applicationId,
-            products: event.products,
-            proofImages: event.proofImages,
-            signature: event.signature);
+      if (event is StartDeliveryEvent) {
+        Response? response =
+            await HttpService().startDelivery(orderIds: event.orderIds);
 
         if (response != null) {
           if (response.statusCode == 200) {
-            inIsProcessing.add(false);
-            Toast.show("Pickup processed successfully!", event.context!,
-                gravity: Toast.bottom, backgroundColor: primary, duration: 2);
-
-            // ScaffoldMessenger.of(event.context!).showSnackBar(const SnackBar(
-            //     content: Text("Pickup processed successfully!")));
-            Navigator.of(event.context!).pushReplacement(
+            Toast.show("Delivery Started successfully!", event.context!,
+                backgroundColor: primary, gravity: Toast.bottom, duration: 2);
+            Navigator.of(event.context!).push(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
           }
         }
       }
+
+      if (event is CompleteDeliveryEvent) {
+        Response? response = await HttpService().completeDeliveryService(
+            orderId: event.orderId, image: event.image);
+
+        if (response != null) {
+          if (response.statusCode == 200) {
+            Toast.show("Delivery Completed successfully!", event.context!,
+                backgroundColor: primary, gravity: Toast.bottom, duration: 2);
+            Navigator.of(event.context!).push(
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
+          }
+        }
+      }
+
       if (event is MarkFailedEvent) {
-        Response? response = await HttpService().markFailedService(
-            applicationId: event.applicationId, reason: event.reason);
+        Response? response = await HttpService()
+            .markFailedService(orderId: event.orderId, reason: event.reason);
 
         if (response != null) {
           if (response.statusCode == 200) {
             inIsProcessing.add(false);
-            Toast.show("Marked failed successfully!", event.context!,
-                backgroundColor: primary, gravity: Toast.bottom, duration: 2);
+
             // ScaffoldMessenger.of(event.context!).showSnackBar(
             //     const SnackBar(content: Text("Marked failed successfully!")));
             Navigator.of(event.context!).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
-          }
-        }
-      }
-      if (event is RetryPickupEvent) {
-        Response? response = await HttpService().retryPickupService(
-          applicationId: event.applicationId,
-        );
-
-        if (response != null) {
-          if (response.statusCode == 200) {
-            inIsProcessing.add(false);
-            Toast.show("Success!", event.context!,
-                gravity: Toast.bottom, backgroundColor: primary, duration: 2);
-            // ScaffoldMessenger.of(event.context!)
-            //     .showSnackBar(const SnackBar(content: Text("Success!")));
-            Navigator.of(event.context!).pushReplacement(
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
-          } else {
-            // ScaffoldMessenger.of(event.context!)
-            //     .showSnackBar(const SnackBar(content: Text("Failed!")));
           }
         }
       }

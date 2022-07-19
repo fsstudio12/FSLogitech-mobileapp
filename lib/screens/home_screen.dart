@@ -9,8 +9,8 @@ import 'package:nova/services/hive_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'pickup_detail_screen.dart';
-import 'pickups_list_screen.dart';
+import 'delivery_detail_screen.dart';
+import 'deliveries_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -99,131 +99,64 @@ class _HomeScreenState extends State<HomeScreen> {
                                         TableCalendar(
                                           calendarBuilders: CalendarBuilders(
                                             markerBuilder: (context, day,
-                                                List<MonthOrder> events) {
+                                                List<dynamic> events) {
                                               if (events.isNotEmpty) {
-                                                if (events[0]
-                                                            .successfulOrdersCount! >
-                                                        0 &&
-                                                    events[0]
-                                                            .failedOrdersCount ==
-                                                        0) {
-                                                  return Positioned(
-                                                    right: 1,
-                                                    bottom: 1,
-                                                    child: Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              color:
-                                                                  Colors.green),
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${events[0].successfulOrdersCount}',
-                                                          style:
-                                                              const TextStyle()
-                                                                  .copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 12.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                } else if (events[0]
-                                                            .successfulOrdersCount ==
-                                                        0 &&
-                                                    events[0]
-                                                            .failedOrdersCount! >
-                                                        0) {
-                                                  return Positioned(
-                                                    right: 1,
-                                                    bottom: 1,
-                                                    child: Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              color:
-                                                                  Colors.red),
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${events[0].failedOrdersCount}',
-                                                          style:
-                                                              const TextStyle()
-                                                                  .copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 12.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                } else if (events[0]
-                                                            .successfulOrdersCount! >
-                                                        0 &&
-                                                    events[0]
-                                                            .failedOrdersCount! >
-                                                        0) {
-                                                  return Positioned(
-                                                    right: 1,
-                                                    bottom: 1,
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              const BoxDecoration(
+                                                return Positioned(
+                                                  right: 1,
+                                                  bottom: 1,
+                                                  child: Row(
+                                                    children: [
+                                                      events[0].successfulOrdersCount >
+                                                              0
+                                                          ? Container(
+                                                              decoration: const BoxDecoration(
                                                                   shape: BoxShape
                                                                       .circle,
                                                                   color: Colors
                                                                       .green),
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          child: Center(
-                                                            child: Text(
-                                                              '${events[0].successfulOrdersCount}',
-                                                              style:
-                                                                  const TextStyle()
+                                                              width: 16.0,
+                                                              height: 16.0,
+                                                              child: Center(
+                                                                child: Text(
+                                                                  '${events[0].successfulOrdersCount}',
+                                                                  style: const TextStyle()
                                                                       .copyWith(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 12.0,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        12.0,
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          decoration:
-                                                              const BoxDecoration(
+                                                            )
+                                                          : Container(),
+                                                      events[0].failedOrdersCount >
+                                                              0
+                                                          ? Container(
+                                                              decoration: const BoxDecoration(
                                                                   shape: BoxShape
                                                                       .circle,
                                                                   color: Colors
                                                                       .red),
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          child: Center(
-                                                            child: Text(
-                                                              '${events[0].failedOrdersCount}',
-                                                              style:
-                                                                  const TextStyle()
+                                                              width: 16.0,
+                                                              height: 16.0,
+                                                              child: Center(
+                                                                child: Text(
+                                                                  '${events[0].failedOrdersCount}',
+                                                                  style: const TextStyle()
                                                                       .copyWith(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 12.0,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        12.0,
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
+                                                            )
+                                                          : Container(),
+                                                    ],
+                                                  ),
+                                                );
                                               } else {
                                                 return Container();
                                               }
@@ -277,19 +210,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         .length;
                                                 i++) {
                                               addedDeliveriesCalendar[
-                                                  DateTime.parse(AppConfig()
-                                                          .standardDate
-                                                          .format(
-                                                              outCalendarResponseSnapshot
-                                                                  .data!
-                                                                  .monthOrders![
-                                                                      i]
-                                                                  .startDate!) +
-                                                      " 00:00:00.000Z")] = [
+                                                  DateTime.parse(
+                                                      "${AppConfig().standardDate.format(outCalendarResponseSnapshot.data!.monthOrders![i].startDate!)} 00:00:00.000Z")] = [
                                                 outCalendarResponseSnapshot
                                                     .data!.monthOrders![i]
                                               ];
                                             }
+                                            print(
+                                                addedDeliveriesCalendar[date]);
 
                                             return addedDeliveriesCalendar[
                                                     date] ??
@@ -463,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         right:
                                                                             10),
                                                                 child: Text(
-                                                                  "Processing",
+                                                                  "Ongoing",
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -516,115 +444,72 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             ],
                                                           ),
                                                         ),
-                                                        Row(
-                                                          children: [
-                                                            outTodaysStatusResponseSnapshot
-                                                                        .data!
-                                                                        .todayOrders!
-                                                                        .ongoing![
-                                                                            ongoingIndex]
-                                                                        .delivery!
-                                                                        .location!
-                                                                        .image !=
-                                                                    null
-                                                                ? Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            10),
-                                                                    child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5),
-                                                                      child: Image.network(outTodaysStatusResponseSnapshot
-                                                                          .data!
-                                                                          .todayOrders!
-                                                                          .ongoing![
-                                                                              ongoingIndex]
-                                                                          .delivery!
-                                                                          .location!
-                                                                          .image!),
-                                                                    ))
-                                                                : Container(),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.name}",
-                                                                  style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700),
-                                                                ),
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                    top: 5,
-                                                                  ),
-                                                                  child: Text(
-                                                                    "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}",
-                                                                    style: const TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
                                                                       .only(
                                                                   top: 5,
                                                                   bottom: 5),
-                                                          child: Text(
-                                                            "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.address}",
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                          ),
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            // Navigator.of(context).push(MaterialPageRoute(
-                                                            //     builder: ((context) => PickupDetailScreen(
-                                                            //         applicationId: outTodaysStatusResponseSnapshot
-                                                            //             .data!
-                                                            //             .ongoing![
-                                                            //                 ongoingIndex]
-                                                            //             .applicationId,
-                                                            //         pickupId: outTodaysStatusResponseSnapshot
-                                                            //             .data!
-                                                            //             .ongoing![
-                                                            //                 ongoingIndex]
-                                                            //             .id))));
-                                                          },
                                                           child: Row(
-                                                            children: const [
-                                                              Text(
-                                                                "View details",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: link,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700),
-                                                              ),
-                                                              Icon(
+                                                            children: [
+                                                              const Icon(
                                                                 PhosphorIcons
-                                                                    .caret_right,
-                                                                size: 15,
-                                                                color: link,
-                                                              )
+                                                                    .map_pin,
+                                                                color: darkGray,
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Text(
+                                                                  "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.address}",
+                                                                  style: const TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400),
+                                                                ),
+                                                              ),
                                                             ],
                                                           ),
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.of(context).push(MaterialPageRoute(
+                                                                    builder: ((context) => DeliveryDetailScreen(
+                                                                        order: outTodaysStatusResponseSnapshot
+                                                                            .data!
+                                                                            .todayOrders!
+                                                                            .ongoing![ongoingIndex]))));
+                                                              },
+                                                              child: Row(
+                                                                children: const [
+                                                                  Text(
+                                                                    "View details",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        color:
+                                                                            link,
+                                                                        fontWeight:
+                                                                            FontWeight.w700),
+                                                                  ),
+                                                                  Icon(
+                                                                    PhosphorIcons
+                                                                        .caret_right,
+                                                                    size: 15,
+                                                                    color: link,
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ],
                                                     ),
@@ -635,70 +520,82 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         MainAxisAlignment
                                                             .spaceAround,
                                                     children: [
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          await launchUrl(Uri.parse(
-                                                              "tel://${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}"));
-                                                        },
-                                                        child: Row(
-                                                          children: const [
-                                                            Icon(
-                                                              PhosphorIcons
-                                                                  .phone_call,
-                                                              size: 20,
-                                                              color: link,
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.name}",
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              top: 5,
                                                             ),
-                                                            Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 5),
-                                                              child: Text(
-                                                                "Call",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700,
-                                                                    color:
-                                                                        link),
-                                                              ),
+                                                            child: Text(
+                                                              "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}",
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
                                                       Container(
                                                         color: pale,
                                                         height: 50,
                                                         width: 1,
                                                       ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          await launchUrl(Uri.parse(
-                                                              "$mapUrl&query=${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.latitude},${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.longitude}"));
-                                                        },
-                                                        child: Row(
-                                                          children: const [
-                                                            Icon(
-                                                              PhosphorIcons
-                                                                  .map_pin,
-                                                              size: 20,
-                                                              color: link,
+                                                      Row(
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () async {
+                                                              await launchUrl(
+                                                                  Uri.parse(
+                                                                      "tel://${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}"));
+                                                            },
+                                                            child: Row(
+                                                              children: const [
+                                                                Icon(
+                                                                  PhosphorIcons
+                                                                      .phone_call,
+                                                                  size: 20,
+                                                                  color: link,
+                                                                ),
+                                                              ],
                                                             ),
-                                                            Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 5),
-                                                              child: Text(
-                                                                "Navigate",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700,
-                                                                    color:
-                                                                        link),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 25),
+                                                            child: InkWell(
+                                                              onTap: () async {
+                                                                await launchUrl(
+                                                                    Uri.parse(
+                                                                        "$mapUrl&query=${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.latitude},${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.longitude}"));
+                                                              },
+                                                              child: Row(
+                                                                children: const [
+                                                                  Icon(
+                                                                    PhosphorIcons
+                                                                        .map_pin,
+                                                                    size: 20,
+                                                                    color: link,
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   )
@@ -942,21 +839,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        _pickupsDesign(
+                        _deliveriesDesign(
                             "Pending",
                             outTodaysStatusResponseSnapshot
                                 .data!.todayOrders!.pending,
                             PhosphorIcons.truck),
-                        _pickupsDesign(
+                        _deliveriesDesign(
                             "Completed",
                             outTodaysStatusResponseSnapshot
                                 .data!.todayOrders!.completed,
-                            PhosphorIcons.clock_clockwise),
-                        _pickupsDesign(
+                            PhosphorIcons.check_circle),
+                        _deliveriesDesign(
                             "Failed",
                             outTodaysStatusResponseSnapshot
                                 .data!.todayOrders!.failed,
-                            PhosphorIcons.warning),
+                            PhosphorIcons.warning_circle),
                       ],
                     );
                   } else {
@@ -967,13 +864,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  _pickupsDesign(type, list, icon) {
+  _deliveriesDesign(type, list, icon) {
     return InkWell(
       onTap: () {
         if (list.isNotEmpty) {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => PickUpsListScreen(
-                    pickUpsList: list,
+              builder: (context) => DeliveriesListScreen(
+                    deliveriesList: list,
                     type: type,
                   )));
         }
@@ -993,14 +890,17 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(children: [
-                  Icon(icon),
+                  Icon(
+                    icon,
+                    color: primary,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "$type Pickups",
+                          "$type Deliveries",
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,

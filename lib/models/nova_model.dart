@@ -495,120 +495,156 @@ class UserData extends HiveObject {
 
 // To parse this JSON data, do
 //
-//     final allPickupsResponseModel = allPickupsResponseModelFromJson(jsonString);
+//     final calendarResponseModel = calendarResponseModelFromJson(jsonString);
 
-AllPickupsResponseModel allPickupsResponseModelFromJson(String str) =>
-    AllPickupsResponseModel.fromJson(json.decode(str));
+CalendarResponseModel calendarResponseModelFromJson(String str) =>
+    CalendarResponseModel.fromJson(json.decode(str));
 
-String allPickupsResponseModelToJson(AllPickupsResponseModel data) =>
+String calendarResponseModelToJson(CalendarResponseModel data) =>
     json.encode(data.toJson());
 
-class AllPickupsResponseModel {
-  AllPickupsResponseModel({
+class CalendarResponseModel {
+  CalendarResponseModel({
     this.success,
-    this.orders,
+    this.todayOrders,
+    this.monthOrders,
   });
 
   bool? success;
-  Orders? orders;
+  TodayOrders? todayOrders;
+  List<MonthOrder>? monthOrders;
 
-  factory AllPickupsResponseModel.fromJson(Map<String, dynamic> json) =>
-      AllPickupsResponseModel(
+  factory CalendarResponseModel.fromJson(Map<String, dynamic> json) =>
+      CalendarResponseModel(
         success: json["success"],
-        orders: Orders.fromJson(json["orders"]),
+        todayOrders: json["todayOrders"] == null
+            ? null
+            : TodayOrders.fromJson(json["todayOrders"]),
+        monthOrders: List<MonthOrder>.from(
+            json["monthOrders"].map((x) => MonthOrder.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
-        "orders": orders!.toJson(),
+        "todayOrders": todayOrders!.toJson(),
+        "monthOrders": List<dynamic>.from(monthOrders!.map((x) => x.toJson())),
       };
 }
 
-class Orders {
-  Orders({
-    this.ongoing,
-    this.pending,
-    this.completed,
-    this.failed,
+class MonthOrder {
+  MonthOrder({
+    this.orders,
+    this.successfulOrdersCount,
+    this.failedOrdersCount,
+    this.startDate,
+    this.endDate,
   });
 
-  List<Ongoing>? ongoing;
-  List<Ongoing>? pending;
-  List<Ongoing>? completed;
-  List<Ongoing>? failed;
+  List<Order>? orders;
+  num? successfulOrdersCount;
 
-  factory Orders.fromJson(Map<String, dynamic> json) => Orders(
-        ongoing:
-            List<Ongoing>.from(json["Ongoing"].map((x) => Ongoing.fromJson(x))),
-        pending:
-            List<Ongoing>.from(json["Pending"].map((x) => Ongoing.fromJson(x))),
-        completed: List<Ongoing>.from(
-            json["Completed"].map((x) => Ongoing.fromJson(x))),
-        failed:
-            List<Ongoing>.from(json["Failed"].map((x) => Ongoing.fromJson(x))),
+  num? failedOrdersCount;
+  DateTime? startDate;
+  DateTime? endDate;
+
+  factory MonthOrder.fromJson(Map<String, dynamic> json) => MonthOrder(
+        orders: List<Order>.from(json["orders"].map((x) => Order.fromJson(x))),
+        successfulOrdersCount: json["successfulOrdersCount"],
+        failedOrdersCount: json["failedOrdersCount"],
+        startDate: DateTime.parse(json["startDate"]),
+        endDate: DateTime.parse(json["endDate"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "Ongoing": List<dynamic>.from(ongoing!.map((x) => x.toJson())),
-        "Pending": List<dynamic>.from(pending!.map((x) => x.toJson())),
-        "Completed": List<dynamic>.from(completed!.map((x) => x.toJson())),
-        "Failed": List<dynamic>.from(failed!.map((x) => x.toJson())),
+        "orders": List<dynamic>.from(orders!.map((x) => x.toJson())),
+        "successfulOrdersCount": successfulOrdersCount,
+        "failedOrdersCount": failedOrdersCount,
+        "startDate": startDate!.toIso8601String(),
+        "endDate": endDate!.toIso8601String(),
       };
 }
 
-class Ongoing {
-  Ongoing({
-    this.orderId,
-    this.needCutlery,
-    this.delivery,
-    this.note,
-    this.createdAt,
-  });
+class Order {
+  Order(
+      {this.orderId,
+      this.userId,
+      this.status,
+      this.needCutlery,
+      this.delivery,
+      this.note,
+      this.payment,
+      this.items,
+      this.combos,
+      this.createdAt,
+      this.foods});
 
   String? orderId;
+  String? userId;
+  String? status;
   bool? needCutlery;
   Delivery? delivery;
   String? note;
+  Payment? payment;
+  Combos? items;
+  Combos? combos;
+  List<Combos>? foods;
   DateTime? createdAt;
 
-  factory Ongoing.fromJson(Map<String, dynamic> json) => Ongoing(
+  factory Order.fromJson(Map<String, dynamic> json) => Order(
         orderId: json["orderId"],
-        needCutlery: json["needCutlery"] == null ? null : json["needCutlery"],
-        delivery: Delivery.fromJson(json["delivery"]),
+        userId: json["userId"],
+        status: json["status"],
+        needCutlery: json["needCutlery"],
+        delivery: json["delivery"] == null
+            ? null
+            : Delivery.fromJson(json["delivery"]),
         note: json["note"],
-        createdAt: DateTime.parse(json["createdAt"]),
+        payment:
+            json["payment"] == null ? null : Payment.fromJson(json["payment"]),
+        items: json["items"] == null ? null : Combos.fromJson(json["items"]),
+        foods: json["foods"] == null
+            ? null
+            : List<Combos>.from(json["foods"].map((x) => Combos.fromJson(x))),
+        combos: json["combos"] == null ? null : Combos.fromJson(json["combos"]),
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.parse(json["createdAt"]),
       );
 
   Map<String, dynamic> toJson() => {
         "orderId": orderId,
-        "needCutlery": needCutlery == null ? null : needCutlery,
+        "userId": userId,
+        "status": status,
+        "needCutlery": needCutlery,
         "delivery": delivery!.toJson(),
         "note": note,
+        "payment": payment!.toJson(),
+        "items": items!.toJson(),
+        "combos": combos!.toJson(),
+        "foods": foods,
         "createdAt": createdAt!.toIso8601String(),
       };
 }
 
 class Delivery {
-  Delivery({
-    this.location,
-    this.charge,
-    this.riderId,
-  });
+  Delivery({this.location, this.charge, this.riderId, this.failReason});
 
   Location? location;
   num? charge;
   String? riderId;
+  String? failReason;
 
   factory Delivery.fromJson(Map<String, dynamic> json) => Delivery(
-        location: Location.fromJson(json["location"]),
-        charge: json["charge"],
-        riderId: json["riderId"],
-      );
+      location: Location.fromJson(json["location"]),
+      charge: json["charge"],
+      riderId: json["riderId"],
+      failReason: json["failReason"]);
 
   Map<String, dynamic> toJson() => {
         "location": location!.toJson(),
         "charge": charge,
         "riderId": riderId,
+        "failReason": failReason
       };
 }
 
@@ -644,7 +680,7 @@ class Location {
       );
 
   Map<String, dynamic> toJson() => {
-        "title": title, 
+        "title": title,
         "image": image,
         "name": name,
         "email": email,
@@ -655,136 +691,8 @@ class Location {
       };
 }
 
-// To parse this JSON data, do
-//
-//     final calendarResponseModel = calendarResponseModelFromJson(jsonString);
-
-CalendarResponseModel calendarResponseModelFromJson(String str) =>
-    CalendarResponseModel.fromJson(json.decode(str));
-
-String calendarResponseModelToJson(CalendarResponseModel data) =>
-    json.encode(data.toJson());
-
-class CalendarResponseModel {
-  CalendarResponseModel({
-    this.success,
-    this.todayOrders,
-    this.monthOrders,
-  });
-
-  bool? success;
-  TodayOrders? todayOrders;
-  List<MonthOrder>? monthOrders;
-
-  factory CalendarResponseModel.fromJson(Map<String, dynamic> json) =>
-      CalendarResponseModel(
-        success: json["success"],
-        todayOrders: TodayOrders.fromJson(json["todayOrders"]),
-        monthOrders: List<MonthOrder>.from(
-            json["monthOrders"].map((x) => MonthOrder.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "success": success,
-        "todayOrders": todayOrders!.toJson(),
-        "monthOrders": List<dynamic>.from(monthOrders!.map((x) => x.toJson())),
-      };
-}
-
-class MonthOrder {
-  MonthOrder({
-    this.successfulOrders,
-    this.successfulOrdersCount,
-    this.failedOrders,
-    this.failedOrdersCount,
-    this.startDate,
-    this.endDate,
-  });
-
-  List<SuccessfulOrder>? successfulOrders;
-  num? successfulOrdersCount;
-  List<FailedOrder>? failedOrders;
-  num? failedOrdersCount;
-  DateTime? startDate;
-  DateTime? endDate;
-
-  factory MonthOrder.fromJson(Map<String, dynamic> json) => MonthOrder(
-        successfulOrders: List<SuccessfulOrder>.from(
-            json["successfulOrders"].map((x) => SuccessfulOrder.fromJson(x))),
-        successfulOrdersCount: json["successfulOrdersCount"],
-        failedOrders: List<FailedOrder>.from(
-            json["failedOrders"].map((x) => FailedOrder.fromJson(x))),
-        failedOrdersCount: json["failedOrdersCount"],
-        startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "successfulOrders":
-            List<dynamic>.from(successfulOrders!.map((x) => x.toJson())),
-        "successfulOrdersCount": successfulOrdersCount,
-        "failedOrders":
-            List<dynamic>.from(failedOrders!.map((x) => x.toJson())),
-        "failedOrdersCount": failedOrdersCount,
-        "startDate": startDate!.toIso8601String(),
-        "endDate": endDate!.toIso8601String(),
-      };
-}
-
-class FailedOrder {
-  FailedOrder({
-    this.orderId,
-    this.userId,
-    this.status,
-    this.needCutlery,
-    this.delivery,
-    this.note,
-    this.payment,
-    this.items,
-    this.combos,
-    this.createdAt,
-  });
-
-  String? orderId;
-  String? userId;
-  String? status;
-  bool? needCutlery;
-  Delivery? delivery;
-  String? note;
-  Payment? payment;
-  ItemsClass? items;
-  ItemsClass? combos;
-  DateTime? createdAt;
-
-  factory FailedOrder.fromJson(Map<String, dynamic> json) => FailedOrder(
-        orderId: json["orderId"],
-        userId: json["userId"],
-        status: json["status"],
-        needCutlery: json["needCutlery"],
-        delivery: Delivery.fromJson(json["delivery"]),
-        note: json["note"],
-        payment: Payment.fromJson(json["payment"]),
-        items: ItemsClass.fromJson(json["items"]),
-        combos: ItemsClass.fromJson(json["combos"]),
-        createdAt: DateTime.parse(json["createdAt"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "orderId": orderId,
-        "userId": userId,
-        "status": status,
-        "needCutlery": needCutlery,
-        "delivery": delivery!.toJson(),
-        "note": note,
-        "payment": payment!.toJson(),
-        "items": items!.toJson(),
-        "combos": combos!.toJson(),
-        "createdAt": createdAt!.toIso8601String(),
-      };
-}
-
-class ItemsClass {
-  ItemsClass({
+class Combos {
+  Combos({
     this.comboId,
     this.name,
     this.image,
@@ -802,7 +710,7 @@ class ItemsClass {
   num? price;
   String? itemId;
 
-  factory ItemsClass.fromJson(Map<String, dynamic> json) => ItemsClass(
+  factory Combos.fromJson(Map<String, dynamic> json) => Combos(
         comboId: json["comboId"] == null ? null : json["comboId"],
         name: json["name"],
         image: json["image"],
@@ -847,67 +755,6 @@ class Payment {
       };
 }
 
-class SuccessfulOrder {
-  SuccessfulOrder({
-    this.orderId,
-    this.userId,
-    this.status,
-    this.needCutlery,
-    this.delivery,
-    this.note,
-    this.payment,
-    this.items,
-    this.combos,
-    this.createdAt,
-  });
-
-  String? orderId;
-  String? userId;
-  String? status;
-  bool? needCutlery;
-  Delivery? delivery;
-  String? note;
-  Payment? payment;
-  ItemsClass? items;
-  ItemsClass? combos;
-  DateTime? createdAt;
-
-  factory SuccessfulOrder.fromJson(Map<String, dynamic> json) =>
-      SuccessfulOrder(
-        orderId: json["orderId"],
-        userId: json["userId"],
-        status: json["status"],
-        needCutlery: json["needCutlery"],
-        delivery: Delivery.fromJson(json["delivery"]),
-        note: json["note"],
-        payment: Payment.fromJson(json["payment"]),
-        items: ItemsClass.fromJson(json["items"]),
-        combos: ItemsClass.fromJson(json["combos"]),
-        createdAt: DateTime.parse(json["createdAt"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "orderId": orderId,
-        "userId": userId,
-        "status": status,
-        "needCutlery": needCutlery,
-        "delivery": delivery!.toJson(),
-        "note": note,
-        "payment": payment!.toJson(),
-        "items": items!.toJson(),
-        "combos": combos!.toJson(),
-        "createdAt": createdAt!.toIso8601String(),
-      };
-}
-
-class PurpleCombos {
-  PurpleCombos();
-
-  factory PurpleCombos.fromJson(Map<String, dynamic> json) => PurpleCombos();
-
-  Map<String, dynamic> toJson() => {};
-}
-
 class TodayOrders {
   TodayOrders({
     this.ongoing,
@@ -916,20 +763,20 @@ class TodayOrders {
     this.failed,
   });
 
-  List<Completed>? ongoing;
-  List<Completed>? pending;
-  List<Completed>? completed;
-  List<Completed>? failed;
+  List<Order>? ongoing;
+  List<Order>? pending;
+  List<Order>? completed;
+  List<Order>? failed;
 
   factory TodayOrders.fromJson(Map<String, dynamic> json) => TodayOrders(
-        ongoing: List<Completed>.from(
-            json["Ongoing"].map((x) => Completed.fromJson(x))),
-        pending: List<Completed>.from(
-            json["Pending"].map((x) => Completed.fromJson(x))),
-        completed: List<Completed>.from(
-            json["Completed"].map((x) => Completed.fromJson(x))),
-        failed: List<Completed>.from(
-            json["Failed"].map((x) => Completed.fromJson(x))),
+        ongoing:
+            List<Order>.from(json["Ongoing"].map((x) => Order.fromJson(x))),
+        pending: json["Pending"] == null
+            ? null
+            : List<Order>.from(json["Pending"].map((x) => Order.fromJson(x))),
+        completed:
+            List<Order>.from(json["Completed"].map((x) => Order.fromJson(x))),
+        failed: List<Order>.from(json["Failed"].map((x) => Order.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -940,34 +787,34 @@ class TodayOrders {
       };
 }
 
-class Completed {
-  Completed({
-    this.orderId,
-    this.needCutlery,
-    this.delivery,
-    this.note,
-    this.createdAt,
-  });
+// class Completed {
+//   Completed({
+//     this.orderId,
+//     this.needCutlery,
+//     this.delivery,
+//     this.note,
+//     this.createdAt,
+//   });
 
-  String? orderId;
-  bool? needCutlery;
-  Delivery? delivery;
-  String? note;
-  DateTime? createdAt;
+//   String? orderId;
+//   bool? needCutlery;
+//   Delivery? delivery;
+//   String? note;
+//   DateTime? createdAt;
 
-  factory Completed.fromJson(Map<String, dynamic> json) => Completed(
-        orderId: json["orderId"],
-        needCutlery: json["needCutlery"] == null ? null : json["needCutlery"],
-        delivery: Delivery.fromJson(json["delivery"]),
-        note: json["note"],
-        createdAt: DateTime.parse(json["createdAt"]),
-      );
+//   factory Completed.fromJson(Map<String, dynamic> json) => Completed(
+//         orderId: json["orderId"],
+//         needCutlery: json["needCutlery"] == null ? null : json["needCutlery"],
+//         delivery: Delivery.fromJson(json["delivery"]),
+//         note: json["note"],
+//         createdAt: DateTime.parse(json["createdAt"]),
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "orderId": orderId,
-        "needCutlery": needCutlery == null ? null : needCutlery,
-        "delivery": delivery!.toJson(),
-        "note": note,
-        "createdAt": createdAt!.toIso8601String(),
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "orderId": orderId,
+//         "needCutlery": needCutlery == null ? null : needCutlery,
+//         "delivery": delivery!.toJson(),
+//         "note": note,
+//         "createdAt": createdAt!.toIso8601String(),
+//       };
+// }

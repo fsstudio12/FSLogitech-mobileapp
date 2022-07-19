@@ -10,14 +10,44 @@ class LoginEvent extends NovaEvent {
   LoginEvent({this.password, this.phoneNumber, this.context});
 }
 
-class GetTodaysStatusEvent extends NovaEvent {
-  RefreshController? refreshController;
-  GetTodaysStatusEvent({this.refreshController});
-}
-
 class GetCalendarEvent extends NovaEvent {
   RefreshController? refreshController;
   GetCalendarEvent({this.refreshController});
+}
+
+class StartDeliveryEvent extends NovaEvent {
+  List? orderIds;
+  BuildContext? context;
+  StartDeliveryEvent({this.orderIds, this.context});
+}
+
+class MarkFailedEvent extends NovaEvent {
+  String? orderId;
+  String? reason;
+  BuildContext? context;
+  MarkFailedEvent({this.orderId, this.context, this.reason});
+}
+
+class CompleteDeliveryEvent extends NovaEvent {
+  String? orderId;
+  Uint8List? image;
+
+  BuildContext? context;
+  CompleteDeliveryEvent({
+    this.orderId,
+    this.image,
+    this.context,
+  });
+}
+
+//
+//
+
+//
+
+class GetTodaysStatusEvent extends NovaEvent {
+  RefreshController? refreshController;
+  GetTodaysStatusEvent({this.refreshController});
 }
 
 class GetPickupDetailEvent extends NovaEvent {
@@ -37,13 +67,6 @@ class StartPickupEvent extends NovaEvent {
       this.signature,
       this.context,
       this.products});
-}
-
-class MarkFailedEvent extends NovaEvent {
-  String? applicationId;
-  String? reason;
-  BuildContext? context;
-  MarkFailedEvent({this.applicationId, this.context, this.reason});
 }
 
 class RetryPickupEvent extends NovaEvent {

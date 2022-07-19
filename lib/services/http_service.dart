@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
@@ -24,9 +25,6 @@ class HttpService {
     }
   }
 
-
-
-
   getCalendar() async {
     try {
       Response? response = await http.post(Uri.parse("$baseUrl/rider/month"),
@@ -39,13 +37,13 @@ class HttpService {
     }
   }
 
-  getPickupDetail({String? id}) async {
+  startDelivery({List? orderIds}) async {
     try {
-      Response? response = await http.post(Uri.parse(baseUrl + "/one"),
+      Response? response = await http.post(Uri.parse("$baseUrl/rider/start"),
           headers: authHeader,
           body: json.encode({
-            "driverId": HiveService().getDriverDetail().userId,
-            "applicationId": id
+            "orderIds": orderIds,
+            "riderId": HiveService().getDriverDetail().employeeId
           }));
       return response;
     } catch (e) {
@@ -53,12 +51,17 @@ class HttpService {
     }
   }
 
-  getCalendarDetail() async {
+  completeDeliveryService({
+    String? orderId,
+    Uint8List? image,
+  }) async {
     try {
-      Response? response = await http.post(Uri.parse(baseUrl + "/calendar"),
+      Response? response = await http.post(Uri.parse("$baseUrl/rider/complete"),
           headers: authHeader,
           body: json.encode({
-            "driverId": HiveService().getDriverDetail().userId,
+            "riderId": HiveService().getDriverDetail().userId,
+            "orderId": orderId,
+            "image": image,
           }));
       return response;
     } catch (e) {
@@ -66,74 +69,14 @@ class HttpService {
     }
   }
 
-  // startPickupService(
-  //     {String? applicationId, List<File>? proofImages, File? signature}) async {
-  //   try {
-  //     var request = http.MultipartRequest('POST', Uri.parse(baseUrl + '/test'));
-  //     request.fields.addAll({
-  //       'driverId': HiveService().getDriverDetail().userId,
-  //       'byteA': applicationId!
-  //     });
-  //     for (var element in proofImages!) {
-  //       request.files.add(await http.MultipartFile.fromPath(
-  //           'proof', element.path.split('/').last));
-  //     }
-
-  //     request.files.add(await http.MultipartFile.fromPath(
-  //         'signature', signature!.path.split('/').last));
-
-  //     request.headers.addAll(authHeader);
-
-  //     dynamic response = await http.Response.fromStream(await request.send());
-
-  //     return response;
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
-
-  startPickupService(
-      {String? applicationId,
-      List<Uint8List>? proofImages,
-      Uint8List? signature,
-      List<Product>? products}) async {
+  markFailedService({String? orderId, String? reason}) async {
     try {
-      Response? response = await http.post(Uri.parse(baseUrl + "/mark_picked"),
+      Response? response = await http.post(Uri.parse("$baseUrl/rider/fail"),
           headers: authHeader,
           body: json.encode({
-            "driverId": HiveService().getDriverDetail().userId,
-            "applicationId": applicationId,
-            "signature": signature,
-            "proofImages": proofImages,
-            "products": products
-          }));
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  markFailedService({String? applicationId, String? reason}) async {
-    try {
-      Response? response = await http.post(Uri.parse(baseUrl + "/mark_failed"),
-          headers: authHeader,
-          body: json.encode({
-            "driverId": HiveService().getDriverDetail().userId,
-            "applicationId": applicationId,
-            "reason": reason
-          }));
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  retryPickupService({String? applicationId, String? reason}) async {
-    try {
-      Response? response = await http.post(Uri.parse(baseUrl + "/retry_pickup"),
-          headers: authHeader,
-          body: json.encode({
-            "applicationId": applicationId,
+            "riderId": HiveService().getDriverDetail().userId,
+            "orderId": orderId,
+            "failReason": reason
           }));
       return response;
     } catch (e) {
