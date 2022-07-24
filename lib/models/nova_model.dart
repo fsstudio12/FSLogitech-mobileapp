@@ -732,26 +732,85 @@ class Combos {
 }
 
 class Payment {
-  Payment({
-    this.subTotal,
-    this.discount,
-    this.total,
-  });
+  Payment(
+      {this.subTotal,
+      this.discount,
+      this.total,
+      this.method,
+      this.taxes,
+      this.txnId,
+      this.isPaid,
+      this.userName,
+      this.userPhone});
 
   num? subTotal;
   num? discount;
+  bool? isPaid;
   num? total;
+  String? method;
+  String? txnId;
+  String? userName;
+  String? userPhone;
+  List<Tax>? taxes;
 
   factory Payment.fromJson(Map<String, dynamic> json) => Payment(
         subTotal: json["subTotal"],
         discount: json["discount"],
+        isPaid: json["isPaid"],
         total: json["total"],
+        method: json["method"] == null ? null : json["method"],
+        txnId: json["txnId"] == null ? null : json["txnId"],
+        userName: json["userName"] == null ? null : json["userName"],
+        userPhone: json["userPhone"] == null ? null : json["userPhone"],
+        taxes: json["taxes"] == null
+            ? null
+            : List<Tax>.from(json["taxes"].map((x) => Tax.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "subTotal": subTotal,
         "discount": discount,
+        "isPaid": isPaid,
         "total": total,
+        "method": method == null ? null : method,
+        "txnId": txnId == null ? null : txnId,
+        "userName": userName == null ? null : userName,
+        "userPhone": userPhone == null ? null : userPhone,
+        "taxes": taxes == null
+            ? null
+            : List<dynamic>.from(taxes!.map((x) => x.toJson())),
+      };
+}
+
+class Tax {
+  Tax({
+    this.name,
+    this.type,
+    this.amount,
+    this.symbol,
+    this.taxableAmount,
+  });
+
+  String? name;
+  String? type;
+  num? amount;
+  String? symbol;
+  num? taxableAmount;
+
+  factory Tax.fromJson(Map<String, dynamic> json) => Tax(
+        name: json["name"],
+        type: json["type"],
+        amount: json["amount"],
+        symbol: json["symbol"],
+        taxableAmount: json["taxableAmount"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "type": type,
+        "amount": amount,
+        "symbol": symbol,
+        "taxableAmount": taxableAmount,
       };
 }
 

@@ -48,23 +48,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text("Sure want to logout?"),
+                      content: const Text("Sure want to logout?"),
                       actions: [
                         Padding(
                           padding: const EdgeInsets.only(right: 20),
                           child: InkWell(
-                            child: Text("Yes"),
+                            child: const Text("Yes"),
                             onTap: () {
                               Box box = HiveService().getNovaBox();
                               box.clear();
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
+                                      builder: (context) =>
+                                          const LoginScreen()));
                             },
                           ),
                         ),
                         InkWell(
-                          child: Text("No"),
+                          child: const Text("No"),
                           onTap: () {
                             Navigator.of(context).pop();
                           },
@@ -182,18 +183,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             if (addedDeliveriesCalendar[
                                                     selectDay] !=
                                                 null) {
-                                              // Navigator.of(context).push(
-                                              //     MaterialPageRoute(
-                                              //         builder: ((context) =>
-                                              //             PickUpsListScreen(
-                                              //               type: AppConfig()
-                                              //                   .standardDate1
-                                              //                   .format(
-                                              //                       selectDay),
-                                              //               pickUpsList:
-                                              //                   addedPickups[
-                                              //                       selectDay]!,
-                                              //             ))));
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          DeliveriesListScreen(
+                                                            type: AppConfig()
+                                                                .standardDate1
+                                                                .format(
+                                                                    selectDay),
+                                                            deliveriesList:
+                                                                addedDeliveriesCalendar[
+                                                                        selectDay]![0]
+                                                                    .orders!,
+                                                          ))));
                                             }
                                           },
                                           selectedDayPredicate:
@@ -283,13 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SmartRefresher(
           physics: const BouncingScrollPhysics(),
-          onRefresh: () async {
-            novaBloc.add(
-                GetTodaysStatusEvent(refreshController: refreshController));
-          },
+          onRefresh: () async {},
           controller: refreshController,
           child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 9),
             child: StreamBuilder<CalendarResponseModel>(
                 stream: novaBloc.outCalendarResponse,
                 builder: (context, outTodaysStatusResponseSnapshot) {
@@ -312,11 +311,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const Text(
                                     "Ongoing Deliveries",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16),
                                   ),
                                   Padding(
-                                      padding: const EdgeInsets.only(top: 10),
+                                      padding: const EdgeInsets.only(top: 19),
                                       child: SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         child: Row(
@@ -335,11 +334,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       .width -
                                                   30,
                                               decoration: BoxDecoration(
+                                                  color: background,
                                                   border: Border.all(
-                                                    color: pale,
+                                                    color: gray,
                                                   ),
                                                   borderRadius:
-                                                      BorderRadius.circular(5)),
+                                                      BorderRadius.circular(
+                                                          12)),
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -347,10 +348,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            left: 10,
-                                                            right: 10,
-                                                            top: 10,
-                                                            bottom: 10),
+                                                            left: 12,
+                                                            right: 12,
+                                                            top: 15,
+                                                            bottom: 12),
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -366,8 +367,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w700,
-                                                                  color: link),
+                                                                          .w600,
+                                                                  color:
+                                                                      darkGray),
                                                             ),
                                                             Container(
                                                               decoration: BoxDecoration(
@@ -378,24 +380,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .circular(
-                                                                              5)),
+                                                                              3)),
                                                               child:
                                                                   const Padding(
                                                                 padding: EdgeInsets
                                                                     .only(
-                                                                        top: 5,
+                                                                        top: 4,
                                                                         bottom:
-                                                                            5,
+                                                                            4,
                                                                         left:
-                                                                            10,
+                                                                            19.24,
                                                                         right:
-                                                                            10),
+                                                                            19.76),
                                                                 child: Text(
                                                                   "Ongoing",
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w700,
+                                                                              .w400,
+                                                                      fontSize:
+                                                                          10,
                                                                       color:
                                                                           processing),
                                                                 ),
@@ -415,6 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 PhosphorIcons
                                                                     .clock,
                                                                 color: darkGray,
+                                                                size: 15,
                                                               ),
                                                               Padding(
                                                                 padding:
@@ -437,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         darkGray,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w700,
+                                                                            .w400,
                                                                   ),
                                                                 ),
                                                               ),
@@ -456,6 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 PhosphorIcons
                                                                     .map_pin,
                                                                 color: darkGray,
+                                                                size: 15,
                                                               ),
                                                               Padding(
                                                                 padding:
@@ -498,7 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         color:
                                                                             link,
                                                                         fontWeight:
-                                                                            FontWeight.w700),
+                                                                            FontWeight.w600),
                                                                   ),
                                                                   Icon(
                                                                     PhosphorIcons

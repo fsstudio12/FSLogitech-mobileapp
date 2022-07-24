@@ -43,127 +43,152 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen> {
                 orderIds = outSelectedPendingOrdersIndexListSnapshot.data!;
                 return Column(
                   children: [
-                    widget.type == "Pending" &&
-                            outSelectedPendingOrdersIndexListSnapshot
-                                .data!.isEmpty
-                        ? InkWell(
-                            onTap: () {
-                              orderIds = [];
-                              for (var v in widget.deliveriesList) {
-                                orderIds.add(v.orderId!);
-                              }
-                              novaBloc.add(StartDeliveryEvent(
-                                  orderIds: orderIds, context: context));
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: primary),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: const Padding(
-                                padding: EdgeInsets.only(top: 16, bottom: 16),
-                                child: Center(
-                                  child: Text(
-                                    "Start All At Once",
-                                    style: TextStyle(
-                                        color: primary,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    widget.type == "Pending"
+                        ? Column(
                             children: [
-                              Row(
-                                children: [
-                                  StreamBuilder<bool>(
-                                      initialData: false,
-                                      stream: novaBloc
-                                          .outSelectAllPendingDeliveries,
-                                      builder: (context,
-                                          outSelectAllPendingDeliveriesSnapshot) {
-                                        return SizedBox(
-                                            height: 16,
-                                            width: 16,
-                                            child: Checkbox(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                                value:
-                                                    outSelectAllPendingDeliveriesSnapshot
-                                                        .data,
-                                                onChanged: (value) {
-                                                  novaBloc
-                                                      .inSelectAllPendingDeliveries
-                                                      .add(value!);
-                                                  if (value) {
-                                                    orderIds = [];
-                                                    for (var v in widget
-                                                        .deliveriesList) {
-                                                      orderIds.add(v.orderId!);
-                                                    }
-                                                    novaBloc
-                                                        .inSelectedPendingOrdersIdsList
-                                                        .add(orderIds);
-                                                  } else {
-                                                    orderIds = [];
-                                                    novaBloc
-                                                        .inSelectedPendingOrdersIdsList
-                                                        .add(orderIds);
-                                                  }
-                                                }));
-                                      }),
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    child: Text(
-                                      "All",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 17,
-                                    width: 3,
-                                    color: darkGray,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: Text(" ${orderIds.length} selected",
-                                        style: const TextStyle(
-                                            color: primary,
-                                            fontWeight: FontWeight.w600)),
-                                  ),
-                                ],
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  novaBloc.add(StartDeliveryEvent(
-                                      orderIds: orderIds, context: context));
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: primary),
-                                      borderRadius: BorderRadius.circular(50)),
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 7, bottom: 7, left: 13, right: 13),
-                                    child: Center(
-                                      child: Text(
-                                        "Start Delivery",
-                                        style: TextStyle(
-                                            color: primary,
-                                            fontWeight: FontWeight.w600),
+                              outSelectedPendingOrdersIndexListSnapshot
+                                      .data!.isEmpty
+                                  ? InkWell(
+                                      onTap: () {
+                                        orderIds = [];
+                                        for (var v in widget.deliveriesList) {
+                                          orderIds.add(v.orderId!);
+                                        }
+                                        novaBloc.add(StartDeliveryEvent(
+                                            orderIds: orderIds,
+                                            context: context));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(color: primary),
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: const Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 16, bottom: 16),
+                                          child: Center(
+                                            child: Text(
+                                              "Start All At Once",
+                                              style: TextStyle(
+                                                  color: primary,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ),
                                       ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            StreamBuilder<bool>(
+                                                initialData: false,
+                                                stream: novaBloc
+                                                    .outSelectAllPendingDeliveries,
+                                                builder: (context,
+                                                    outSelectAllPendingDeliveriesSnapshot) {
+                                                  return SizedBox(
+                                                      height: 16,
+                                                      width: 16,
+                                                      child: Checkbox(
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)),
+                                                          value:
+                                                              outSelectAllPendingDeliveriesSnapshot
+                                                                  .data,
+                                                          onChanged: (value) {
+                                                            novaBloc
+                                                                .inSelectAllPendingDeliveries
+                                                                .add(value!);
+                                                            if (value) {
+                                                              orderIds = [];
+                                                              for (var v in widget
+                                                                  .deliveriesList) {
+                                                                orderIds.add(
+                                                                    v.orderId!);
+                                                              }
+                                                              novaBloc
+                                                                  .inSelectedPendingOrdersIdsList
+                                                                  .add(
+                                                                      orderIds);
+                                                            } else {
+                                                              orderIds = [];
+                                                              novaBloc
+                                                                  .inSelectedPendingOrdersIdsList
+                                                                  .add(
+                                                                      orderIds);
+                                                            }
+                                                          }));
+                                                }),
+                                            const Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Text(
+                                                "All",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: 17,
+                                              width: 3,
+                                              color: darkGray,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5),
+                                              child: Text(
+                                                  " ${orderIds.length} selected",
+                                                  style: const TextStyle(
+                                                      color: primary,
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                            ),
+                                          ],
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            novaBloc.add(StartDeliveryEvent(
+                                                orderIds: orderIds,
+                                                context: context));
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                border:
+                                                    Border.all(color: primary),
+                                                borderRadius:
+                                                    BorderRadius.circular(50)),
+                                            child: const Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 7,
+                                                  bottom: 7,
+                                                  left: 13,
+                                                  right: 13),
+                                              child: Center(
+                                                child: Text(
+                                                  "Start Delivery",
+                                                  style: TextStyle(
+                                                      color: primary,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                              ),
                             ],
-                          ),
+                          )
+                        : Container(),
                     Column(
                         children: List.generate(widget.deliveriesList.length,
                             (listIndex) {

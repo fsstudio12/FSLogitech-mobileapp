@@ -31,8 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
           child: Image.asset(
         "assets/images/finalized_nova_logo.png",
-        height: 200,
-        width: 200,
+        height: 132.61,
+        width: 157.1,
         fit: BoxFit.fill,
       )),
     );

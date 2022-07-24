@@ -29,7 +29,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     fontSize: 32, color: primary, fontWeight: FontWeight.w600),
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 30),
+                padding: EdgeInsets.only(top: 6, bottom: 44),
                 child: Text(
                   "to",
                   style: TextStyle(
@@ -40,8 +40,8 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
               Image.asset(
                 "assets/images/finalized_nova_logo_full.png",
-                height: 250,
-                width: 250,
+                height: 132.33,
+                width: 156.77,
                 fit: BoxFit.fill,
               ),
             ]),
@@ -55,7 +55,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   child: Text(
                     "Login",
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w700),
+                        color: Colors.white, fontWeight: FontWeight.w600),
                   ),
                 ),
                 onPressed: () {

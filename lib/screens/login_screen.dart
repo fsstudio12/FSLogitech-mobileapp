@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:nova/bloc/nova_bloc.dart';
 
@@ -30,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(bottom: 20, top: 15),
+              padding: EdgeInsets.only(bottom: 38, top: 12),
               child: Text(
                 "Login",
                 style: TextStyle(
@@ -42,13 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontWeight: FontWeight.w400),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20, top: 10),
-              child: TextField(
-                controller: contactController,
-                decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 10),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
+              padding: const EdgeInsets.only(bottom: 12, top: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: gray)),
+                child: TextField(
+                  controller: contactController,
+                  decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 10),
+                      border: InputBorder.none),
+                ),
               ),
             ),
             const Text(
@@ -56,21 +58,24 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontWeight: FontWeight.w400),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 10),
+              padding: const EdgeInsets.only(bottom: 12, top: 8),
               child: StreamBuilder<bool>(
                   initialData: false,
                   stream: novaBloc.outIsObscured,
                   builder: (context, outIsObscuredSnapshot) {
                     return Stack(
                       children: [
-                        TextField(
-                          controller: passwordController,
-                          obscureText: outIsObscuredSnapshot.data!,
-                          decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(0),
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)))),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: gray)),
+                          child: TextField(
+                            controller: passwordController,
+                            obscureText: outIsObscuredSnapshot.data!,
+                            decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(0),
+                                border: InputBorder.none),
+                          ),
                         ),
                         Align(
                           alignment: Alignment.centerRight,
@@ -102,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onChanged: (value) {}),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.only(left: 8),
                       child: Text(
                         "Remember me",
                         style: TextStyle(
@@ -114,23 +119,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text(
                   "Forgot Password?",
                   style: TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 12, color: link),
+                      fontWeight: FontWeight.w600, fontSize: 12, color: link),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20, top: 15),
+              padding: const EdgeInsets.only(bottom: 20, top: 24),
               child: MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   minWidth: MediaQuery.of(context).size.width,
                   color: primary,
                   child: const Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
+                    padding: EdgeInsets.only(top: 16, bottom: 16),
                     child: Text(
                       "Login",
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
+                          color: Colors.white, fontWeight: FontWeight.w600),
                     ),
                   ),
                   onPressed: () {

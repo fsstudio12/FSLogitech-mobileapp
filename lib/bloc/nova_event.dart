@@ -31,50 +31,14 @@ class MarkFailedEvent extends NovaEvent {
 class CompleteDeliveryEvent extends NovaEvent {
   String? orderId;
   Uint8List? image;
+  String? method;
 
   BuildContext? context;
-  CompleteDeliveryEvent({
-    this.orderId,
-    this.image,
-    this.context,
-  });
+  CompleteDeliveryEvent({this.orderId, this.image, this.context, this.method});
 }
 
-//
-//
 
-//
 
-class GetTodaysStatusEvent extends NovaEvent {
-  RefreshController? refreshController;
-  GetTodaysStatusEvent({this.refreshController});
-}
 
-class GetPickupDetailEvent extends NovaEvent {
-  String? id;
-  GetPickupDetailEvent({this.id});
-}
 
-class StartPickupEvent extends NovaEvent {
-  String? applicationId;
-  Uint8List? signature;
-  List<Uint8List>? proofImages;
-  BuildContext? context;
-  List<Product>? products;
-  StartPickupEvent(
-      {this.applicationId,
-      this.proofImages,
-      this.signature,
-      this.context,
-      this.products});
-}
 
-class RetryPickupEvent extends NovaEvent {
-  String? applicationId;
-
-  BuildContext? context;
-  RetryPickupEvent({
-    this.applicationId,
-    this.context,
-  });
-}

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
@@ -7,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:nova/services/hive_service.dart';
 
 import '../app_config.dart';
-import '../models/nova_model.dart';
 
 class HttpService {
   login({String? contact, String? password}) async {
@@ -54,16 +52,33 @@ class HttpService {
   completeDeliveryService({
     String? orderId,
     Uint8List? image,
+    String? method,
   }) async {
     try {
-      Response? response = await http.post(Uri.parse("$baseUrl/rider/complete"),
-          headers: authHeader,
-          body: json.encode({
-            "riderId": HiveService().getDriverDetail().userId,
-            "orderId": orderId,
-            "image": image,
-          }));
+      var request = http.Request(
+          'POST', Uri.parse('http://192.168.1.79:3011/rider/complete'));
+      request.body = json.encode({
+        "orderId": "6295acf61183d0bbe7d63b4d",
+        "riderId": "627a3365e99e664decf69dc5",
+        "image": image,
+        "method": method
+      });
+      request.headers.addAll(authHeader);
+
+      http.StreamedResponse streamedresponse = await request.send();
+      var response = await http.Response.fromStream(streamedresponse);
+
       return response;
+      // Response? response = await http.post(Uri.parse("$baseUrl/rider/complete"),
+      //     headers: authHeader,
+      //     body: json.encode({
+      //       "orderId": orderId,
+      //       "riderId": HiveService().getDriverDetail().userId,
+      //       "image": image,
+      //       "method": method
+      //     }));
+      // return response;
+
     } catch (e) {
       return null;
     }

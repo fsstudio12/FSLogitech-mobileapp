@@ -42,12 +42,7 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
   Sink<CalendarResponseModel> get inCalendarResponse =>
       _calendarResponseStreamController.sink;
 
-  final StreamController<PickupDetailResponseModel>
-      _pickUpDetailResponseStreamController = BehaviorSubject();
-  Stream<PickupDetailResponseModel> get outPickupDetailResponse =>
-      _pickUpDetailResponseStreamController.stream;
-  Sink<PickupDetailResponseModel> get inPickupDetailResponse =>
-      _pickUpDetailResponseStreamController.sink;
+
 
   //start pickup streams
 
@@ -95,6 +90,17 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
       _selectAllPendingDeliveries.stream;
   Sink<bool> get inSelectAllPendingDeliveries =>
       _selectAllPendingDeliveries.sink;
+
+  final StreamController<String> _selectedPaymentMethodFromDropdown =
+      BehaviorSubject();
+  Stream<String> get outSelectedPaymentMethodFromDropdown =>
+      _selectedPaymentMethodFromDropdown.stream;
+  Sink<String> get inSelectedPaymentMethodFromDropdown =>
+      _selectedPaymentMethodFromDropdown.sink;
+
+  final StreamController<Uint8List> _proofImage = BehaviorSubject();
+  Stream<Uint8List> get outProofImage => _proofImage.stream;
+  Sink<Uint8List> get inProofImage => _proofImage.sink;
 
   NovaBloc() : super(OvaInitial()) {
     on<NovaEvent>((event, emit) async {
@@ -149,7 +155,7 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
 
       if (event is CompleteDeliveryEvent) {
         Response? response = await HttpService().completeDeliveryService(
-            orderId: event.orderId, image: event.image);
+            orderId: event.orderId, image: event.image, method: event.method);
 
         if (response != null) {
           if (response.statusCode == 200) {

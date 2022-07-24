@@ -136,12 +136,13 @@ const Color primary = Color(0xFF0046A0);
 const Color secondary = Color(0xFFF7941E);
 const Color link = Color(0xFF192FA4);
 const Color pale = Color(0xFFEFEFF7);
-const Color darkGray = Color(0xFF6B6B6B);
-const Color gray = Color(0xFFBDBABA);
+const Color darkGray = Color(0xFF8D8D94);
+const Color gray = Color(0xFFE1E7ED);
 const Color processing = Color(0xFF3C91E6);
 const Color failed = Color(0xFF8F2D56);
 const Color completed = Color(0xFF2DCEBB);
 const Color pending = Color(0xFFFFD322);
+const Color background = Color(0xFFFDFEFF);
 
 //google map url
 
@@ -149,7 +150,7 @@ const mapUrl = "https://www.google.com/maps/search/?api=1";
 
 //base url
 
-const baseUrl = "http://192.168.1.89:3011";
+const baseUrl = "http://192.168.1.79:3011";
 
 //auth header
 var authHeader = {
