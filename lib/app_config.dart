@@ -5,7 +5,7 @@ import 'services/hive_service.dart';
 
 class AppConfig {
   ThemeData themeData = ThemeData(
-      fontFamily: "Work Sans",
+      fontFamily: 'Work Sans',
       appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),

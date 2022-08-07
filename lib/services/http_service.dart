@@ -10,7 +10,8 @@ import '../app_config.dart';
 class HttpService {
   login({String? contact, String? password}) async {
     try {
-      Response? response = await http.post(Uri.parse("$baseUrl/employee/login"),
+      Response? response = await http.post(
+          Uri.parse("$baseUrl/employee/riderLogin"),
           headers: {
             "Content-Type": "application/json",
             "x-api-key": "d3d42f9b-5b2b-483b-976a-c4c7e81e9e8e"
@@ -55,30 +56,28 @@ class HttpService {
     String? method,
   }) async {
     try {
-      var request = http.Request(
-          'POST', Uri.parse('http://192.168.1.79:3011/rider/complete'));
-      request.body = json.encode({
-        "orderId": "6295acf61183d0bbe7d63b4d",
-        "riderId": "627a3365e99e664decf69dc5",
-        "image": image,
-        "method": method
-      });
-      request.headers.addAll(authHeader);
+      // var request = http.Request('POST', Uri.parse('$baseUrl/rider/complete'));
+      // request.body = json.encode({
+      //   "orderId": "6295acf61183d0bbe7d63b4d",
+      //   "riderId": "627a3365e99e664decf69dc5",
+      //   "image": image,
+      //   "method": method
+      // });
+      // request.headers.addAll(authHeader);
 
-      http.StreamedResponse streamedresponse = await request.send();
-      var response = await http.Response.fromStream(streamedresponse);
+      // http.StreamedResponse streamedresponse = await request.send();
+      // var response = await http.Response.fromStream(streamedresponse);
 
-      return response;
-      // Response? response = await http.post(Uri.parse("$baseUrl/rider/complete"),
-      //     headers: authHeader,
-      //     body: json.encode({
-      //       "orderId": orderId,
-      //       "riderId": HiveService().getDriverDetail().userId,
-      //       "image": image,
-      //       "method": method
-      //     }));
       // return response;
-
+      Response? response = await http.post(Uri.parse("$baseUrl/rider/complete"),
+          headers: authHeader,
+          body: json.encode({
+            "orderId": orderId,
+            "riderId": HiveService().getDriverDetail().employeeId,
+            "image": image,
+            "method": method
+          }));
+      return response;
     } catch (e) {
       return null;
     }
@@ -86,12 +85,13 @@ class HttpService {
 
   markFailedService({String? orderId, String? reason}) async {
     try {
+      
       Response? response = await http.post(Uri.parse("$baseUrl/rider/fail"),
           headers: authHeader,
           body: json.encode({
-            "riderId": HiveService().getDriverDetail().userId,
             "orderId": orderId,
-            "failReason": reason
+            "failReason": reason,
+            "riderId": HiveService().getDriverDetail().employeeId,
           }));
       return response;
     } catch (e) {

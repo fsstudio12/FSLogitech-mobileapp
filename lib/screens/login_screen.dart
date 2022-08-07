@@ -100,11 +100,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 14.0,
                       width: 14.0,
-                      child: Checkbox(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                          value: true,
-                          onChanged: (value) {}),
+                      child: StreamBuilder<bool>(
+                          initialData: false,
+                          stream: novaBloc.outIsBoxChecked,
+                          builder: (context, outIsBoxCheckedSnapshot) {
+                            return Checkbox(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4)),
+                                value: outIsBoxCheckedSnapshot.data!,
+                                onChanged: (value) {
+                                  novaBloc.inIsBoxChecked.add(value!);
+                                });
+                          }),
                     ),
                     const Padding(
                       padding: EdgeInsets.only(left: 8),
@@ -125,24 +132,34 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 20, top: 24),
-              child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  minWidth: MediaQuery.of(context).size.width,
-                  color: primary,
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 16),
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  onPressed: () {
-                    novaBloc.add(LoginEvent(
-                        password: passwordController.text,
-                        phoneNumber: contactController.text,
-                        context: context));
+              child: StreamBuilder<bool>(
+                  initialData: false,
+                  stream: novaBloc.outIsLoading,
+                  builder: (context, outIsLoadingSnapshot) {
+                    return MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        minWidth: MediaQuery.of(context).size.width,
+                        color: primary,
+                        onPressed: outIsLoadingSnapshot.data!
+                            ? null
+                            : () {
+                                novaBloc.inIsLoading.add(true);
+                                novaBloc.add(LoginEvent(
+                                    password: passwordController.text,
+                                    phoneNumber: contactController.text,
+                                    context: context));
+                              },
+                        child: Padding(
+                            padding: const EdgeInsets.only(top: 16, bottom: 16),
+                            child: outIsLoadingSnapshot.data!
+                                ? const LinearProgressIndicator()
+                                : const Text(
+                                    "Login",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600),
+                                  )));
                   }),
             )
           ],

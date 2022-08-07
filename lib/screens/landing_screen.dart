@@ -23,26 +23,33 @@ class _LandingScreenState extends State<LandingScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(children: [
-              const Text(
-                "Welcome",
-                style: TextStyle(
-                    fontSize: 32, color: primary, fontWeight: FontWeight.w600),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 6, bottom: 44),
-                child: Text(
-                  "to",
-                  style: TextStyle(
-                      fontSize: 32,
-                      color: primary,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
               Image.asset(
                 "assets/images/finalized_nova_logo_full.png",
-                height: 132.33,
-                width: 156.77,
+                // height: 132.33,
+                // width: 156.77,
+                height: 105.76,
+                width: 109,
                 fit: BoxFit.fill,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 27, bottom: 5),
+                child: Text(
+                  "Watch & engage",
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w400),
+                ),
+              ),
+              const Text(
+                "wherever, whenever",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w400),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 47, bottom: 10),
+                child: Image.asset(
+                  "assets/images/landing.png",
+                  height: 264.52,
+                  width: 328,
+                  fit: BoxFit.fill,
+                ),
               ),
             ]),
             MaterialButton(

@@ -37,6 +37,12 @@ class CompleteDeliveryEvent extends NovaEvent {
   CompleteDeliveryEvent({this.orderId, this.image, this.context, this.method});
 }
 
+class ResetPassword extends NovaEvent {
+  BuildContext? context;
+  String? email;
+  ResetPassword({this.email, this.context});
+}
+
 
 
 

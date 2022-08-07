@@ -5,6 +5,7 @@ import 'package:nova/app_config.dart';
 import 'package:nova/bloc/nova_bloc.dart';
 import 'package:nova/models/nova_model.dart';
 import 'package:nova/screens/login_screen.dart';
+import 'package:nova/screens/rider_profile_screen.dart';
 import 'package:nova/services/hive_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -42,46 +43,20 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
-          title: InkWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: const Text("Sure want to logout?"),
-                      actions: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: InkWell(
-                            child: const Text("Yes"),
-                            onTap: () {
-                              Box box = HiveService().getNovaBox();
-                              box.clear();
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginScreen()));
-                            },
-                          ),
-                        ),
-                        InkWell(
-                          child: const Text("No"),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  });
-            },
-            child: Image.asset(
-              "assets/images/finalized_nova_logo.png",
-              height: 25,
-              width: 25,
-              fit: BoxFit.fill,
-            ),
+          title: Image.asset(
+            "assets/images/finalized_nova_logo.png",
+            height: 25,
+            width: 25,
+            fit: BoxFit.fill,
           ),
           actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const RiderProfileScreen()));
+              },
+              icon: const Icon(PhosphorIcons.user),
+            ),
             StreamBuilder<CalendarResponseModel>(
                 stream: novaBloc.outCalendarResponse,
                 builder: (context, outCalendarResponseSnapshot) {
@@ -109,23 +84,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     children: [
                                                       events[0].successfulOrdersCount >
                                                               0
-                                                          ? Container(
-                                                              decoration: const BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  color: Colors
-                                                                      .green),
-                                                              width: 16.0,
-                                                              height: 16.0,
-                                                              child: Center(
-                                                                child: Text(
-                                                                  '${events[0].successfulOrdersCount}',
-                                                                  style: const TextStyle()
-                                                                      .copyWith(
+                                                          ? Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right: 3),
+                                                              child: Container(
+                                                                decoration: const BoxDecoration(
+                                                                    shape: BoxShape
+                                                                        .circle,
                                                                     color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        12.0,
+                                                                        .green),
+                                                                width: 16.0,
+                                                                height: 16.0,
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${events[0].successfulOrdersCount}',
+                                                                    style: const TextStyle()
+                                                                        .copyWith(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          12.0,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
@@ -280,12 +261,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else {
                     return Container();
                   }
-                })
+                }),
           ],
         ),
         body: SmartRefresher(
           physics: const BouncingScrollPhysics(),
-          onRefresh: () async {},
+          onRefresh: () async {
+            novaBloc
+                .add(GetCalendarEvent(refreshController: refreshController));
+          },
           controller: refreshController,
           child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 9),
@@ -308,9 +292,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "Ongoing Deliveries",
-                                    style: TextStyle(
+                                  Text(
+                                    "Ongoing Deliveries (${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing!.length})",
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16),
                                   ),
@@ -521,89 +505,98 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                   ),
                                                   const Divider(height: 0),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.name}",
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              top: 5,
-                                                            ),
-                                                            child: Text(
-                                                              "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}",
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      left: 12,
+                                                      right: 12,
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.name}",
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w400),
+                                                                          .w700),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Container(
-                                                        color: pale,
-                                                        height: 50,
-                                                        width: 1,
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () async {
-                                                              await launchUrl(
-                                                                  Uri.parse(
-                                                                      "tel://${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}"));
-                                                            },
-                                                            child: Row(
-                                                              children: const [
-                                                                Icon(
-                                                                  PhosphorIcons
-                                                                      .phone_call,
-                                                                  size: 20,
-                                                                  color: link,
-                                                                ),
-                                                              ],
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                top: 5,
+                                                              ),
+                                                              child: Text(
+                                                                "${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}",
+                                                                style: const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 25),
-                                                            child: InkWell(
+                                                          ],
+                                                        ),
+                                                        Container(
+                                                          color: pale,
+                                                          height: 50,
+                                                          width: 1,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            InkWell(
                                                               onTap: () async {
                                                                 await launchUrl(
                                                                     Uri.parse(
-                                                                        "$mapUrl&query=${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.latitude},${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.longitude}"));
+                                                                        "tel://${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.phone}"));
                                                               },
                                                               child: Row(
                                                                 children: const [
                                                                   Icon(
                                                                     PhosphorIcons
-                                                                        .map_pin,
+                                                                        .phone_call,
                                                                     size: 20,
                                                                     color: link,
                                                                   ),
                                                                 ],
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 25),
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  await launchUrl(
+                                                                      Uri.parse(
+                                                                          "$mapUrl&query=${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.latitude},${outTodaysStatusResponseSnapshot.data!.todayOrders!.ongoing![ongoingIndex].delivery!.location!.longitude}"));
+                                                                },
+                                                                child: Row(
+                                                                  children: const [
+                                                                    Icon(
+                                                                      PhosphorIcons
+                                                                          .map_pin,
+                                                                      size: 20,
+                                                                      color:
+                                                                          link,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -840,8 +833,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             "Today's Status",
                             style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -926,7 +919,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ]),
                 const Icon(
                   PhosphorIcons.caret_right,
-                  color: gray,
+                  color: darkGray,
                 ),
               ],
             ),

@@ -42,8 +42,6 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
   Sink<CalendarResponseModel> get inCalendarResponse =>
       _calendarResponseStreamController.sink;
 
-
-
   //start pickup streams
 
   final StreamController<bool> _startPickupProductsConfirmedStreamController =
@@ -81,9 +79,9 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
   Sink<List<String>> get inSelectedPendingOrdersIdsList =>
       _selectedPendingOrdersIdsListStreamController.sink;
 
-  final StreamController<bool> _isProcessing = BehaviorSubject();
-  Stream<bool> get outIsProcessing => _isProcessing.stream;
-  Sink<bool> get inIsProcessing => _isProcessing.sink;
+  // final StreamController<bool> _isProcessing = BehaviorSubject();
+  // Stream<bool> get outIsProcessing => _isProcessing.stream;
+  // Sink<bool> get inIsProcessing => _isProcessing.sink;
 
   final StreamController<bool> _selectAllPendingDeliveries = BehaviorSubject();
   Stream<bool> get outSelectAllPendingDeliveries =>
@@ -102,6 +100,32 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
   Stream<Uint8List> get outProofImage => _proofImage.stream;
   Sink<Uint8List> get inProofImage => _proofImage.sink;
 
+  final StreamController<bool> _loginCheckbox = BehaviorSubject();
+  Stream<bool> get outIsBoxChecked => _loginCheckbox.stream;
+  Sink<bool> get inIsBoxChecked => _loginCheckbox.sink;
+
+  final StreamController<bool> _isLoading = BehaviorSubject();
+  Stream<bool> get outIsLoading => _isLoading.stream;
+  Sink<bool> get inIsLoading => _isLoading.sink;
+
+  final StreamController<int> _resetPasswordStateController = BehaviorSubject();
+  Stream<int> get outResetPasswordState => _resetPasswordStateController.stream;
+  Sink<int> get inResetPasswordState => _resetPasswordStateController.sink;
+
+  final StreamController<bool> _passwordObscureStreamController =
+      BehaviorSubject();
+  Stream<bool> get outPasswordObscureResponse =>
+      _passwordObscureStreamController.stream;
+  Sink<bool> get inPasswordObscureResponse =>
+      _passwordObscureStreamController.sink;
+
+  final StreamController<bool> _confirmPasswordObscureStreamController =
+      BehaviorSubject();
+  Stream<bool> get outConfirmPasswordObscureResponse =>
+      _confirmPasswordObscureStreamController.stream;
+  Sink<bool> get inConfirmPasswordObscureResponse =>
+      _confirmPasswordObscureStreamController.sink;
+
   NovaBloc() : super(OvaInitial()) {
     on<NovaEvent>((event, emit) async {
       if (event is LoginEvent) {
@@ -117,13 +141,16 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
 
             Navigator.of(event.context!).push(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
+            inIsLoading.add(false);
           } else {
             Toast.show("Something went wrong!", event.context!,
                 gravity: Toast.bottom, backgroundColor: primary, duration: 2);
+            inIsLoading.add(false);
           }
         } else {
           Toast.show("Something went wrong!", event.context!,
               gravity: Toast.bottom, backgroundColor: primary, duration: 2);
+          inIsLoading.add(false);
         }
       }
 
@@ -149,6 +176,7 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
                 backgroundColor: primary, gravity: Toast.bottom, duration: 2);
             Navigator.of(event.context!).push(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
+            inIsLoading.add(false);
           }
         }
       }
@@ -163,6 +191,7 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
                 backgroundColor: primary, gravity: Toast.bottom, duration: 2);
             Navigator.of(event.context!).push(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
+            inIsLoading.add(false);
           }
         }
       }
@@ -173,12 +202,11 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
 
         if (response != null) {
           if (response.statusCode == 200) {
-            inIsProcessing.add(false);
-
             // ScaffoldMessenger.of(event.context!).showSnackBar(
             //     const SnackBar(content: Text("Marked failed successfully!")));
             Navigator.of(event.context!).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
+            inIsLoading.add(false);
           }
         }
       }
