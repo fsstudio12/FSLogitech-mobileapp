@@ -444,6 +444,7 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen> {
                                         Text(
                                           "${widget.deliveriesList[listIndex].delivery!.location!.name}",
                                           style: const TextStyle(
+                                              fontFamily: "Poppins",
                                               fontWeight: FontWeight.w700),
                                         ),
                                         Padding(

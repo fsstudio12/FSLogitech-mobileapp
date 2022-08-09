@@ -149,60 +149,6 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                 ),
                               );
                             });
-
-                        // showDialog(
-                        //     context: context,
-                        //     builder: (dialogContext) {
-                        //       return AlertDialog(
-                        //         title: const Text("Mark as failed?"),
-                        //         content: Column(
-                        //             crossAxisAlignment:
-                        //                 CrossAxisAlignment.start,
-                        //             mainAxisSize: MainAxisSize.min,
-                        //             children: [
-                        //               const Text("Reason"),
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(top: 10),
-                        //                 child: TextField(
-                        //                   controller: markFailedController,
-                        //                   decoration: const InputDecoration(
-                        //                       border: OutlineInputBorder()),
-                        //                 ),
-                        //               ),
-                        //               OutlinedButton(
-                        //                 style: OutlinedButton.styleFrom(
-                        //                   side: const BorderSide(
-                        //                       // width: 5.0,
-                        //                       color: primary),
-                        //                 ),
-                        //                 onPressed: () {
-                        //                   Navigator.of(context).pop();
-                        //                 },
-                        //                 child: const Text(
-                        //                   "Cancel",
-                        //                   style: TextStyle(color: primary),
-                        //                 ),
-                        //               ),
-                        //               MaterialButton(
-                        //                 color: primary,
-                        //                 onPressed: () {
-                        //                   novaBloc.inIsLoading.add(true);
-                        //                   novaBloc.add(MarkFailedEvent(
-                        //                       context: context,
-                        //                       orderId: widget.order.orderId,
-                        //                       reason:
-                        //                           markFailedController.text));
-                        //                   Navigator.of(context).pop();
-                        //                 },
-                        //                 child: const Text(
-                        //                   "Proceed",
-                        //                   style: TextStyle(color: Colors.white),
-                        //                 ),
-                        //               ),
-                        //             ]),
-                        //       );
-                        //     });
-
                       }
                     },
                     itemBuilder: (BuildContext context) =>
@@ -396,6 +342,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                         Text(
                                           widget.order.foods![foodsIndex].name!,
                                           style: const TextStyle(
+                                            fontFamily: "Poppins",
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -405,6 +352,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                           child: Text(
                                             "Qty: ${widget.order.foods![foodsIndex].quantity!}",
                                             style: const TextStyle(
+                                              fontFamily: "Poppins",
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
@@ -412,6 +360,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                         Text(
                                           "Rs. ${widget.order.foods![foodsIndex].price!}",
                                           style: const TextStyle(
+                                            fontFamily: "Poppins",
                                             color: primary,
                                             fontWeight: FontWeight.w400,
                                           ),
@@ -445,11 +394,13 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                 const Text(
                                   "Total",
                                   style: TextStyle(
+                                    fontFamily: "Poppins",
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text("Rs. ${widget.order.payment!.total!}",
                                     style: const TextStyle(
+                                      fontFamily: "Poppins",
                                       fontWeight: FontWeight.w400,
                                     ))
                               ],
@@ -461,12 +412,14 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                 children: [
                                   const Text("Sub Total",
                                       style: TextStyle(
+                                        fontFamily: "Poppins",
                                         color: darkGray,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                       )),
                                   Text("Rs. ${widget.order.payment!.subTotal!}",
                                       style: const TextStyle(
+                                        fontFamily: "Poppins",
                                         color: darkGray,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
@@ -479,12 +432,14 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                 children: [
                                   const Text("Discount",
                                       style: TextStyle(
+                                        fontFamily: "Poppins",
                                         color: darkGray,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                       )),
                                   Text("Rs. ${widget.order.payment!.discount!}",
                                       style: const TextStyle(
+                                        fontFamily: "Poppins",
                                         color: darkGray,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
@@ -503,6 +458,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                             Text(
                                                 "${widget.order.payment!.taxes![taxIndex].name}",
                                                 style: const TextStyle(
+                                                  fontFamily: "Poppins",
                                                   color: darkGray,
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400,
@@ -510,6 +466,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                             Text(
                                                 "Rs. ${widget.order.payment!.taxes![taxIndex].amount}",
                                                 style: const TextStyle(
+                                                  fontFamily: "Poppins",
                                                   color: darkGray,
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400,
@@ -529,12 +486,18 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                 const Text(
                                   "Status",
                                   style: TextStyle(
+                                    fontFamily: "Poppins",
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Text(widget.order.payment!.isPaid!
-                                    ? "Paid"
-                                    : "Unpaid")
+                                Text(
+                                  widget.order.payment!.isPaid!
+                                      ? "Paid"
+                                      : "Unpaid",
+                                  style: const TextStyle(
+                                    fontFamily: "Poppins",
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -557,10 +520,20 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text("Paid via"),
+                                              const Text(
+                                                "Paid via",
+                                                style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                ),
+                                              ),
                                               widget.order.payment!.isPaid!
-                                                  ? Text(widget
-                                                      .order.payment!.method!)
+                                                  ? Text(
+                                                      widget.order.payment!
+                                                          .method!,
+                                                      style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                      ),
+                                                    )
                                                   : Container(
                                                       height: 25,
                                                       padding:
@@ -579,7 +552,12 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                                                             outSelectedPaymentMethodFromDropdownSnapshot
                                                                 .data,
                                                         hint: const Text(
-                                                            "Select One"),
+                                                          "Select One",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                "Poppins",
+                                                          ),
+                                                        ),
                                                         iconSize: 0,
                                                         elevation: 0,
                                                         style: const TextStyle(

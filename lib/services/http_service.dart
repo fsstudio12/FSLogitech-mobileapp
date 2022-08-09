@@ -85,7 +85,6 @@ class HttpService {
 
   markFailedService({String? orderId, String? reason}) async {
     try {
-      
       Response? response = await http.post(Uri.parse("$baseUrl/rider/fail"),
           headers: authHeader,
           body: json.encode({
