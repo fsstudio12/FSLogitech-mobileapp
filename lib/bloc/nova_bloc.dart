@@ -10,7 +10,6 @@ import 'package:http/http.dart';
 import 'package:nova/app_config.dart';
 
 import 'package:nova/screens/home_screen.dart';
-import 'package:nova/screens/landing_screen.dart';
 import 'package:nova/services/hive_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
@@ -126,6 +125,13 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
   Sink<bool> get inConfirmPasswordObscureResponse =>
       _confirmPasswordObscureStreamController.sink;
 
+  // final StreamController<List<InAppNotification>> _inAppNotificationListStreamController = BehaviorSubject();
+  // Stream<List<InAppNotification>> get outInAppNotificationList =>
+  //     _inAppNotificationListStreamController.stream;
+  // Sink<List<InAppNotification>> get inInAppNotificationList =>
+  //     _inAppNotificationListStreamController.sink;
+
+
   NovaBloc() : super(OvaInitial()) {
     on<NovaEvent>((event, emit) async {
       if (event is LoginEvent) {
@@ -159,8 +165,9 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
 
         if (response != null) {
           if (response.statusCode == 200) {
-            inCalendarResponse
-                .add(calendarResponseModelFromJson(response.body));
+            inCalendarResponse.add(
+              calendarResponseModelFromJson(response.body),
+            );
             event.refreshController!.refreshCompleted();
           }
         }
@@ -179,6 +186,26 @@ class NovaBloc extends Bloc<NovaEvent, NovaState> {
             inIsLoading.add(false);
           }
         }
+      }
+
+      if (event is ReadInAppNotifications) {
+        CalendarResponseModel updatedResponseModel = event.previousCalendarResponseModel;
+        updatedResponseModel.unreadCount = 0;
+
+        inCalendarResponse.add(event.previousCalendarResponseModel);
+
+        var data = await HttpService().readInAppNotification(userId: event.userId);
+        if (data != null) {
+          List<InAppNotification> notifications = List<InAppNotification>.from(
+              jsonDecode(data.body)["notifications"]
+                  .map((x) => InAppNotification.fromJson(x)));
+
+          updatedResponseModel.notifications = notifications;
+          updatedResponseModel.unreadCount = jsonDecode(data.body)['unReadCount'];
+
+          inCalendarResponse.add(updatedResponseModel);
+        }
+        
       }
 
       if (event is CompleteDeliveryEvent) {

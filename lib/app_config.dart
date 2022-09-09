@@ -137,6 +137,7 @@ const Color secondary = Color(0xFFF7941E);
 const Color link = Color(0xFF192FA4);
 const Color pale = Color(0xFFEFEFF7);
 const Color darkGray = Color(0xFF8D8D94);
+const Color black = Color(0xFF2E2E2E);
 const Color gray = Color(0xFFE1E7ED);
 const Color processing = Color(0xFF3C91E6);
 const Color failed = Color(0xFF8F2D56);

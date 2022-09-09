@@ -15,6 +15,13 @@ class GetCalendarEvent extends NovaEvent {
   GetCalendarEvent({this.refreshController});
 }
 
+class ReadInAppNotifications extends NovaEvent {
+  final CalendarResponseModel previousCalendarResponseModel;
+  final String userId;
+
+  ReadInAppNotifications({required this.previousCalendarResponseModel, required this.userId});
+}
+
 class StartDeliveryEvent extends NovaEvent {
   List? orderIds;
   BuildContext? context;

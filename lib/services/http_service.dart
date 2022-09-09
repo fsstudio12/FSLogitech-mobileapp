@@ -97,4 +97,22 @@ class HttpService {
       return null;
     }
   }
+
+  readInAppNotification({required String userId}) async {
+    try {
+      Response? response = await http.post(
+        Uri.parse("$baseUrl/notification/read"),
+        headers: authHeader,
+        body: json.encode(
+          {
+            "employeeId": userId,
+          },
+        ),
+      );
+
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
 }

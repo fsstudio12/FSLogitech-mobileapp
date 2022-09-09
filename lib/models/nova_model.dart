@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:nova/core/enums/notificationEnum.dart';
 
 part 'nova_model.g.dart';
 
@@ -508,11 +509,15 @@ class CalendarResponseModel {
     this.success,
     this.todayOrders,
     this.monthOrders,
+    this.notifications,
+    this.unreadCount = 0,
   });
 
   bool? success;
   TodayOrders? todayOrders;
   List<MonthOrder>? monthOrders;
+  List<InAppNotification>? notifications;
+  int unreadCount;
 
   factory CalendarResponseModel.fromJson(Map<String, dynamic> json) =>
       CalendarResponseModel(
@@ -521,7 +526,16 @@ class CalendarResponseModel {
             ? null
             : TodayOrders.fromJson(json["todayOrders"]),
         monthOrders: List<MonthOrder>.from(
-            json["monthOrders"].map((x) => MonthOrder.fromJson(x))),
+          json["monthOrders"].map(
+            (x) => MonthOrder.fromJson(x),
+          ),
+        ),
+        notifications: List<InAppNotification>.from(
+          json["notifications"].map(
+            (x) => InAppNotification.fromJson(x),
+          ),
+        ),
+        unreadCount: json['unReadCount']
       );
 
   Map<String, dynamic> toJson() => {
@@ -844,6 +858,35 @@ class TodayOrders {
         "Completed": List<dynamic>.from(completed!.map((x) => x.toJson())),
         "Failed": List<dynamic>.from(failed!.map((x) => x.toJson())),
       };
+}
+
+class InAppNotification {
+  final NotificationType notificationType;
+  final String notificationId;
+  final String entityId;
+  final String title;
+  final DateTime createdAt;
+  final String body;
+  final bool isRead;
+
+  InAppNotification(
+      {this.notificationType = NotificationType.Delivery,
+      required this.notificationId,
+      required this.entityId,
+      required this.title,
+      required this.createdAt,
+      required this.body,
+      required this.isRead});
+
+  factory InAppNotification.fromJson(Map<String, dynamic> json) =>
+      InAppNotification(
+        notificationId: json['notificationId'],
+        entityId: json['entityId'],
+        title: json['title'],
+        createdAt: DateTime.parse(json['createdAt']),
+        body: json['body'],
+        isRead: json['isRead'],
+      );
 }
 
 // class Completed {
